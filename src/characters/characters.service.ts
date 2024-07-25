@@ -70,7 +70,7 @@ export class CharactersService {
         create: {
           id: character.id,
           name: character.name,
-          status: character.status,  // Mantén el status como string
+          status: character.status, 
           statusTypeId: statusMap.get(character.status),
           species: character.species,
           type: character.type,
