@@ -8,7 +8,7 @@ import { CharacterEntity } from './entity/character.entity';
 @Injectable()
 export class CharactersService {
   constructor(
-    //private readonly httpService: HttpService,
+    private readonly httpService: HttpService,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -18,6 +18,7 @@ export class CharactersService {
       data:{
         name:character.name,
         status:character.status,
+        statusTypeId:character.statusTypeId,
         species: character.species,
         type: character.type,
         gender: character.gender,
@@ -30,15 +31,35 @@ export class CharactersService {
   }
 
   async findAllCharacters(): Promise<CharacterEntity[]> {
-   /*const response = await lastValueFrom(this.httpService.get('https://rickandmortyapi.com/api/character'));
+    const response = await lastValueFrom(this.httpService.get('https://rickandmortyapi.com/api/character'));
     const apiCharacters = response.data.results;
-
+  
+    // Mapeo de status a statusTypeId
+    const statusMap = new Map<string, number>();
+    const statusTypes = await this.prisma.statusType.findMany();
+  
+    for (const statusType of statusTypes) {
+      statusMap.set(statusType.type, statusType.id);
+    }
+  
     for (const character of apiCharacters) {
+      // Obtén el statusTypeId usando el status de la API
+      const statusTypeId = statusMap.get(character.status) || null;
+  
+      // Si el status no existe en la tabla StatusType, agrégalo
+      if (!statusTypeId) {
+        const newStatusType = await this.prisma.statusType.create({
+          data: { type: character.status },
+        });
+        statusMap.set(character.status, newStatusType.id);
+      }
+  
       await this.prisma.character.upsert({
         where: { id: character.id },
         update: {
           name: character.name,
-          status: character.status,
+          status: character.status, 
+          statusTypeId: statusMap.get(character.status),
           species: character.species,
           type: character.type,
           gender: character.gender,
@@ -49,7 +70,8 @@ export class CharactersService {
         create: {
           id: character.id,
           name: character.name,
-          status: character.status,
+          status: character.status,  // Mantén el status como string
+          statusTypeId: statusMap.get(character.status),
           species: character.species,
           type: character.type,
           gender: character.gender,
@@ -58,10 +80,11 @@ export class CharactersService {
           image: character.image,
         },
       });
-    }*/
-
+    }
+  
     return this.prisma.character.findMany();
   }
+  
 
   async findCharacterById(id: number): Promise<CharacterEntity | null> {
     try {
@@ -89,7 +112,7 @@ export class CharactersService {
       where: {id},
       data:{
        name: character.name || current.name,
-       status: character.status||current.status,
+       status: character.status|| current.status,
        species: character.species||current.species,
        type: character.type || current.type,
        gender: character.gender || current.gender,
