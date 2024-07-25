@@ -8,18 +8,29 @@ datasource db {
 }
 
 model StatusType {
-  id         Int          @id @default(autoincrement())
-  type       String       @unique
-  characters Character[]  @relation("CharacterStatus")
-  episodes   Episode[]    @relation("EpisodeStatus")
+  id         Int         @id @default(autoincrement())
+  type       String      @unique // 'CHARACTERS' o 'EPISODES'
+  statuses   Status[]    @relation("StatusTypeStatuses")
 }
 
-model Character {
-  id           Int         @id @default(autoincrement())
-  name         String
-  status       String
-  statusType   StatusType  @relation("CharacterStatus", fields: [statusTypeId], references: [id])
+model Status {
+  id          Int         @id @default(autoincrement())
+  name        String
+  statusType  StatusType  @relation("StatusTypeStatuses", fields: [statusTypeId], references: [id])
   statusTypeId Int
+  characters  Character[] @relation("CharacterStatus")
+  episodes    Episode[]   @relation("EpisodeStatus")
+
+  @@unique([name, statusTypeId])
+}
+
+
+
+model Character {
+  id           Int       @id @default(autoincrement())
+  name         String
+  status       Status    @relation("CharacterStatus", fields: [statusId], references: [id])
+  statusId     Int
   species      String
   type         String
   gender       String
@@ -29,12 +40,12 @@ model Character {
 }
 
 model Episode {
-  id           Int         @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   name         String
   air_date     String
   episode      String
-  statusType   StatusType  @relation("EpisodeStatus", fields: [statusTypeId], references: [id])
-  statusTypeId Int
   url          String
-  created      DateTime
+  created      String
+  status       Status    @relation("EpisodeStatus", fields: [statusId], references: [id])
+  statusId     Int
 }
