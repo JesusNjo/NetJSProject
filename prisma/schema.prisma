@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,14 +6,35 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model StatusType {
+  id         Int          @id @default(autoincrement())
+  type       String       @unique
+  characters Character[]  @relation("CharacterStatus")
+  episodes   Episode[]    @relation("EpisodeStatus")
+}
+
 model Character {
-  id       Int    @id @default(autoincrement())
-  name     String
-  status   String
-  species  String
-  type     String
-  gender   String
-  origin   String
-  location String
-  image    String
+  id           Int         @id @default(autoincrement())
+  name         String
+  status       String
+  statusType   StatusType  @relation("CharacterStatus", fields: [statusTypeId], references: [id])
+  statusTypeId Int
+  species      String
+  type         String
+  gender       String
+  origin       String
+  location     String
+  image        String
+}
+
+model Episode {
+  id           Int         @id @default(autoincrement())
+  name         String
+  air_date     String
+  episode      String
+  statusType   StatusType  @relation("EpisodeStatus", fields: [statusTypeId], references: [id])
+  statusTypeId Int
+  url          String
+  created      DateTime
 }

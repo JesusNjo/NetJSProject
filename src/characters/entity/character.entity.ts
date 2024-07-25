@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsInt, IsString } from 'class-validator';
 
 export class CharacterEntity {
   @IsOptional()
@@ -7,7 +7,11 @@ export class CharacterEntity {
 
   @IsOptional()
   @IsString()
-  status?: string;
+  status?: string;  // Mantén status como string
+
+  @IsOptional()
+  @IsInt()
+  statusTypeId?: number;  // Agrega el campo statusTypeId para la relación con StatusType
 
   @IsOptional()
   @IsString()
