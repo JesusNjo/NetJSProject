@@ -12,93 +12,84 @@ export class CharactersService {
     private readonly prisma: PrismaService,
   ) {}
 
-
   async createCharacter(character: CharacterEntity): Promise<Character> {
-    // Asegúrate de que el statusTypeId esté configurado correctamente
-    if (character.statusTypeId) {
-      // Verifica si el statusTypeId existe en la tabla StatusType
-      const statusTypeExists = await this.prisma.statusType.findUnique({
-        where: { id: character.statusTypeId }
-      });
+    // Verificar si el statusId existe en la tabla Status
+    const statusExists = await this.prisma.status.findUnique({
+      where: { id: character.statusId },
+    });
   
-      if (!statusTypeExists) {
-        throw new Error(`StatusType with id ${character.statusTypeId} does not exist`);
-      }
+    if (!statusExists) {
+      throw new Error(`Status with ID ${character.statusId} does not exist.`);
     }
   
-    // Crea el nuevo personaje usando el statusId en lugar del status
+    // Crear el nuevo personaje usando el statusId
     const newCharacter = await this.prisma.character.create({
       data: {
         name: character.name,
-        statusId: character.statusTypeId, 
+        statusId: character.statusId || Math.floor(Math.random() * 2) + 1,
         species: character.species,
         type: character.type,
         gender: character.gender,
         origin: character.origin,
         location: character.location,
-        image: character.image
+        image: character.image,
+        url : character.url
       },
     });
   
     return newCharacter;
   }
   
+  
+  
+  
 
   async findAllCharacters(): Promise<CharacterEntity[]> {
     const response = await lastValueFrom(this.httpService.get('https://rickandmortyapi.com/api/character'));
     const apiCharacters = response.data.results;
-  
+    
     // Mapeo de status a statusId
     const statusMap = new Map<string, number>();
-    const statuses = await this.prisma.status.findMany();  // Cambia statusType por status
+    const statuses = await this.prisma.status.findMany({ where: { statusTypeId: 1 } });
   
     for (const status of statuses) {
-      statusMap.set(status.name, status.id);  // Usa status.name en lugar de statusType.type
+      statusMap.set(status.name, status.id);
     }
-  
+    
     for (const character of apiCharacters) {
-      // Obtén el statusId usando el status de la API
       const statusId = statusMap.get(character.status) || null;
-  
-      // Si el status no existe en la tabla Status, agrégalo
-      if (!statusId) {
-        const newStatus = await this.prisma.status.create({
-          data: {
-            name: character.status,
-            statusTypeId: 1  // Ajusta según sea necesario, puede ser un valor por defecto
-          },
-        });
-        statusMap.set(character.status, newStatus.id);
-      }
   
       await this.prisma.character.upsert({
         where: { id: character.id },
         update: {
-          name: character.name,
-          statusId: statusMap.get(character.status),  // Usa statusId aquí
-          species: character.species,
-          type: character.type,
-          gender: character.gender,
-          origin: character.origin.name,
-          location: character.location.name,
-          image: character.image,
+          name: character.name || undefined,
+          statusId: statusId || Math.floor(Math.random() * 2) + 1,
+          species: character.species || undefined,
+          type: character.type || undefined,
+          gender: character.gender || undefined,
+          origin: character.origin?.name || null,
+          location: character.location?.name || null,
+          image: character.image || undefined,
+          url: character.url
         },
         create: {
-          id: character.id,
-          name: character.name,
-          statusId: statusMap.get(character.status),  // Usa statusId aquí
-          species: character.species,
-          type: character.type,
-          gender: character.gender,
-          origin: character.origin.name,
-          location: character.location.name,
-          image: character.image,
-        },
+          name: character.name || 'Unknown',
+          statusId: statusId || Math.floor(Math.random() * 2) + 1,
+          species: character.species || 'Unknown',
+          type: character.type || 'Unknown',
+          gender: character.gender || 'Unknown',
+          origin: character.origin?.name || null,
+          location: character.location?.name || null,
+          image: character.image || null,
+          url: character.url
+        }
       });
     }
-  
+    
     return this.prisma.character.findMany();
   }
+  
+  
   
   
   
@@ -119,23 +110,22 @@ export class CharactersService {
       where: { id },
     });
     if (!characterFound) return null;
-  
+
     return this.prisma.character.delete({ where: { id } });
   }
-  
 
   async updateCharacterById(id: number, character: CharacterEntity): Promise<Character> {
     const current = await this.prisma.character.findUnique({ where: { id } });
-  
+
     if (!current) {
       throw new Error(`Character with id ${id} does not exist`);
     }
-  
+
     const characterToModify = await this.prisma.character.update({
       where: { id },
       data: {
         name: character.name || current.name,
-        statusId: character.statusTypeId || current.statusId,  // Usar statusId en lugar de status
+        statusId: character.statusId || current.statusId,
         species: character.species || current.species,
         type: character.type || current.type,
         gender: character.gender || current.gender,
@@ -144,8 +134,7 @@ export class CharactersService {
         image: character.image || current.image
       }
     });
-  
+
     return characterToModify;
   }
-  
 }

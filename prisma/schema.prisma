@@ -19,33 +19,34 @@ model Status {
   statusType  StatusType  @relation("StatusTypeStatuses", fields: [statusTypeId], references: [id])
   statusTypeId Int
   characters  Character[] @relation("CharacterStatus")
-  episodes    Episode[]   @relation("EpisodeStatus")
+  episodes    Episode[]   @relation("EpisodeStatus") // Sin fields o references
 
   @@unique([name, statusTypeId])
 }
 
-
-
 model Character {
-  id           Int       @id @default(autoincrement())
-  name         String
-  status       Status    @relation("CharacterStatus", fields: [statusId], references: [id])
-  statusId     Int
-  species      String
-  type         String
-  gender       String
-  origin       String
-  location     String
-  image        String
+  id        Int      @id @default(autoincrement())
+  name      String
+  statusId  Int?
+  status    Status?  @relation("CharacterStatus", fields: [statusId], references: [id])
+  species   String?
+  type      String?
+  gender    String?
+  origin    String?
+  location  String?
+  image     String?
+  url       String   @unique // Asegúrate de que el campo url sea único
+  episodes  Episode[] @relation("CharacterEpisodes")
 }
 
 model Episode {
-  id           Int       @id @default(autoincrement())
-  name         String
-  air_date     String
-  episode      String
-  url          String
-  created      String
-  status       Status    @relation("EpisodeStatus", fields: [statusId], references: [id])
-  statusId     Int
+  id         Int          @id @default(autoincrement())
+  name       String
+  air_date   String
+  episode    String
+  url        String        @unique
+  created    String
+  statusId   Int
+  status     Status        @relation("EpisodeStatus", fields: [statusId], references: [id]) // Especificar la relación aquí
+  characters Character[]   @relation("CharacterEpisodes")
 }

@@ -17,7 +17,6 @@ async function main() {
       create: statusType,
     });
   }
-  
 
   // Seed Statuses
   const statuses = [
@@ -28,35 +27,37 @@ async function main() {
   ];
 
   for (const status of statuses) {
-    console.log(`Upserting statusType: ${status.name}`);
+    console.log(`Upserting status: ${status.name}`);
     const statusType = await prisma.statusType.findUnique({
       where: { type: status.statusType }
     });
 
     if (statusType) {
-      const existingStatus = await prisma.status.findFirst({
+      await prisma.status.upsert({
         where: {
+          name_statusTypeId: {
+            name: status.name,
+            statusTypeId: statusType.id
+          }
+        },
+        update: {},
+        create: {
           name: status.name,
           statusTypeId: statusType.id
         }
       });
-
-      if (!existingStatus) {
-        await prisma.status.create({
-          data: {
-            name: status.name,
-            statusTypeId: statusType.id
-          }
-        });
-      }
+    } else {
+      console.error(`StatusType ${status.statusType} not found`);
     }
   }
 }
 
 main()
   .catch(e => {
+    console.error(e);
     throw e;
   })
   .finally(async () => {
     await prisma.$disconnect();
   });
+  
