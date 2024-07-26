@@ -8,33 +8,45 @@ datasource db {
 }
 
 model StatusType {
-  id         Int          @id @default(autoincrement())
-  type       String       @unique
-  characters Character[]  @relation("CharacterStatus")
-  episodes   Episode[]    @relation("EpisodeStatus")
+  id         Int         @id @default(autoincrement())
+  type       String      @unique // 'CHARACTERS' o 'EPISODES'
+  statuses   Status[]    @relation("StatusTypeStatuses")
+}
+
+model Status {
+  id          Int         @id @default(autoincrement())
+  name        String
+  statusType  StatusType  @relation("StatusTypeStatuses", fields: [statusTypeId], references: [id])
+  statusTypeId Int
+  characters  Character[] @relation("CharacterStatus")
+  episodes    Episode[]   @relation("EpisodeStatus") // Sin fields o references
+
+  @@unique([name, statusTypeId])
 }
 
 model Character {
-  id           Int         @id @default(autoincrement())
-  name         String
-  status       String
-  statusType   StatusType  @relation("CharacterStatus", fields: [statusTypeId], references: [id])
-  statusTypeId Int
-  species      String
-  type         String
-  gender       String
-  origin       String
-  location     String
-  image        String
+  id        Int      @id @default(autoincrement())
+  name      String
+  statusId  Int?
+  status    Status?  @relation("CharacterStatus", fields: [statusId], references: [id])
+  species   String?
+  type      String?
+  gender    String?
+  origin    String?
+  location  String?
+  image     String?
+  url       String   @unique // Asegúrate de que el campo url sea único
+  episodes  Episode[] @relation("CharacterEpisodes")
 }
 
 model Episode {
-  id           Int         @id @default(autoincrement())
-  name         String
-  air_date     String
-  episode      String
-  statusType   StatusType  @relation("EpisodeStatus", fields: [statusTypeId], references: [id])
-  statusTypeId Int
-  url          String
-  created      DateTime
+  id         Int          @id @default(autoincrement())
+  name       String
+  air_date   String
+  episode    String
+  url        String        @unique
+  created    String
+  statusId   Int
+  status     Status        @relation("EpisodeStatus", fields: [statusId], references: [id]) // Especificar la relación aquí
+  characters Character[]   @relation("CharacterEpisodes")
 }

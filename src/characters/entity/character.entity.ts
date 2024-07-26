@@ -6,12 +6,8 @@ export class CharacterEntity {
   name?: string;
 
   @IsOptional()
-  @IsString()
-  status?: string;  // Mantén status como string
-
-  @IsOptional()
   @IsInt()
-  statusTypeId?: number;  // Agrega el campo statusTypeId para la relación con StatusType
+  statusId?: number;  
 
   @IsOptional()
   @IsString()
@@ -36,4 +32,8 @@ export class CharacterEntity {
   @IsOptional()
   @IsString()
   image?: string;
+
+  @IsOptional()
+  @IsString()
+  url?: string;  // Añadir si el campo url es necesario
 }
