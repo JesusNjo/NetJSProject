@@ -226,4 +226,20 @@ export class EpisodesService {
       },
     });
   }
+
+  async findEpisodesPaginationFive(page:number):Promise<Episode[]>{
+    if(page <1 ){
+      throw new Error('Invalid page number or page size.');
+    }
+
+    const skip = (page -1 ) * 5;
+
+    return this.prisma.episode.findMany({
+      skip: skip,
+      take: 5,
+      orderBy: {
+        id: 'asc',
+      },
+    });
+  }
 }
