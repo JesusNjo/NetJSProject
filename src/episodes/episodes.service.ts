@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { EpisodeEntity } from './entities/episode.entity';
@@ -8,33 +8,52 @@ import { Episode } from '@prisma/client';
 @Injectable()
 export class EpisodesService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly prisma: PrismaService, // Cambiado a PrismaService
     private readonly httpService: HttpService,
   ) {}
 
-  async findAllEpisodes(): Promise<EpisodeEntity[] | Object> {
+  async findAllEpisodes(): Promise<any> {
     const response = await lastValueFrom(this.httpService.get('https://rickandmortyapi.com/api/episode'));
     const apiEpisodes = response.data.results;
-
+  
     const statusMap = new Map<string, number>();
     const statuses = await this.prisma.status.findMany({ where: { statusTypeId: 2 } });
-
+  
     for (const status of statuses) {
       statusMap.set(status.name, status.id);
     }
-
+  
+    const existingCharacters = await this.prisma.character.findMany({
+      select: { url: true }
+    });
+    const existingCharacterUrls = new Set(existingCharacters.map(character => character.url));
+  
     for (const episode of apiEpisodes) {
-      const characterUrls = episode.characters;
-
-      const characterConnectOrCreate = characterUrls.map((url: string) => ({
-        where: { url },
+      
+      const validCharacterUrls = episode.characters.filter((url: unknown) =>
+        typeof url === 'string' && existingCharacterUrls.has(url)
+      );
+  
+      const characterConnectOrCreate = validCharacterUrls.map((url: string) => ({
+        where: { url: url },
         create: {
-          url,
+          url: url,
           name: 'Unknown',
         },
       }));
-
+  
       const statusId = statusMap.get(episode.status) || Math.floor(Math.random() * 2) + 3;
+      const defaultDuration = Math.floor(Math.random() * 41) + 20;
+
+      const existingEpisode = await this.prisma.episode.findUnique({
+        where: { url: episode.url }
+      });
+
+      const duration = existingEpisode && existingEpisode.duration > 0
+      ? existingEpisode.duration 
+      : (episode.duration && episode.duration > 0) 
+        ? episode.duration
+        : defaultDuration; 
 
       await this.prisma.episode.upsert({
         where: { url: episode.url },
@@ -45,6 +64,7 @@ export class EpisodesService {
           url: episode.url || undefined,
           created: episode.created || undefined,
           statusId: statusId,
+          duration: duration,
           characters: {
             connectOrCreate: characterConnectOrCreate,
           },
@@ -56,21 +76,25 @@ export class EpisodesService {
           url: episode.url || null,
           created: episode.created || null,
           statusId: statusId,
+          duration: duration,
           characters: {
             connectOrCreate: characterConnectOrCreate,
           },
         },
       });
     }
-
+  
     return this.prisma.episode.findMany({
+      orderBy: {id:'asc'},
       include: {
         characters: true,
       },
     });
   }
+  
+  
 
-  async createEpisode(episode: EpisodeEntity): Promise<Episode> {
+  async createEpisode(episode: any): Promise<any> {
     const statusId = episode.statusId || Math.floor(Math.random() * 2) + 3;
 
     const statusExists = await this.prisma.status.findUnique({
@@ -84,21 +108,23 @@ export class EpisodesService {
     const characterUrls = episode.characters || [];
 
     const characterConnectOrCreate = characterUrls.map((url: string) => ({
-      where: { url },
+      where: { url: url },
       create: {
-        url,
+        url: url,
         name: 'Unknown',
       },
     }));
-
+    const duration = Math.floor(Math.random() * 41) + 20;
     const newEpisode = await this.prisma.episode.create({
       data: {
+        
         name: episode.name || null,
         air_date: episode.air_date || null,
         episode: episode.episode || null,
         url: episode.url || null,
         created: episode.created || null,
         statusId: statusId,
+        duration: episode.duration || duration ,
         characters: {
           connectOrCreate: characterConnectOrCreate,
         },

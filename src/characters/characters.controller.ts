@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Put, Query, Res } from '@nestjs/common';
 import { CharactersService } from './characters.service';
 import { Response } from 'express';
 import { CharacterEntity } from './entity/character.entity';
@@ -17,14 +17,20 @@ export class CharactersController {
     }
   }
 
-  @Get()
-  async getCharacters(): Promise<CharacterEntity[]> {
-    return this.charactersService.findAllCharacters();
+  @Get('/all')
+  async getCharacters(@Res() res: Response): Promise<void> {
+    try {
+      const characters = await this.charactersService.findAllCharacters();
+      res.status(200).json(characters);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
   }
 
   @Get(':id')
   async getCharacterById(@Param('id', ParseIntPipe) id: number): Promise<CharacterEntity | null> {
     return this.charactersService.findCharacterById(id);
+
   }
 
   @Delete(':id')
@@ -49,4 +55,42 @@ export class CharactersController {
       return res.status(500).json({ message: error.message });
     }
   }
+  //Requerimientos
+
+  @Get('/find-by-type/:type')
+  async findCharactersByType(@Param('type') type: string, @Res() res: Response): Promise<void> {
+    try {
+      if (!type) {
+        res.status(400).json({ message: 'Type query parameter is required' });
+        return;
+      }
+
+      const characters = await this.charactersService.findCharactersByType(type);
+      if (characters.length > 0) {
+        res.status(200).json(characters);
+      } else {
+        res.status(204).json([]);
+      }
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+  @Get('/find-by-species/:species')
+  async findCharacterBySpecie(@Param('species') species: string,@Res() res:Response):Promise<void>{
+    try {
+      if (!species) {
+        res.status(400).json({ message: 'Specie query parameter is required' });
+        return;
+      }
+      const characters = await this.charactersService.findCharacterBySpecie(species);
+      if (characters.length > 0) {
+        res.status(200).json(characters);
+      } else {
+        res.status(204).json([]);
+      }
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  } 
+
 }

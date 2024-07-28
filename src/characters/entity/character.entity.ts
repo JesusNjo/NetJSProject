@@ -35,5 +35,5 @@ export class CharacterEntity {
 
   @IsOptional()
   @IsString()
-  url?: string;  // Añadir si el campo url es necesario
+  url?: string; 
 }

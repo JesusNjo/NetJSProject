@@ -48,6 +48,8 @@ export class CharactersService {
     
     const statusMap = new Map<string, number>();
     const statuses = await this.prisma.status.findMany({ where: { statusTypeId: 1 } });
+    
+   
   
     for (const status of statuses) {
       statusMap.set(status.name, status.id);
@@ -59,36 +61,33 @@ export class CharactersService {
       await this.prisma.character.upsert({
         where: { id: character.id },
         update: {
-          name: character.name || undefined,
+          name: character.name,
           statusId: statusId || Math.floor(Math.random() * 2) + 1,
-          species: character.species || undefined,
-          type: character.type || undefined,
-          gender: character.gender || undefined,
-          origin: character.origin?.name || null,
-          location: character.location?.name || null,
-          image: character.image || undefined,
+          species: character.species,
+          type: character.type,
+          gender: character.gender,
+          origin: character.origin?.name,
+          location: character.location?.name,
+          image: character.image,
           url: character.url
         },
         create: {
-          name: character.name || 'Unknown',
+          name: character.name,
           statusId: statusId || Math.floor(Math.random() * 2) + 1,
-          species: character.species || 'Unknown',
-          type: character.type || 'Unknown',
-          gender: character.gender || 'Unknown',
-          origin: character.origin?.name || null,
-          location: character.location?.name || null,
-          image: character.image || null,
+          species: character.species,
+          type: character.type,
+          gender: character.gender,
+          origin: character.origin?.name,
+          location: character.location?.name,
+          image: character.image,
           url: character.url
         }
       });
     }
     
-    return this.prisma.character.findMany();
+    
+    return this.prisma.character.findMany({orderBy: {id :'asc'}});
   }
-  
-  
-  
-  
   
 
   async findCharacterById(id: number): Promise<CharacterEntity | null> {
@@ -133,5 +132,31 @@ export class CharactersService {
     });
 
     return characterToModify;
+  }
+
+  //Requerimientos nuevos:
+
+  async findCharactersByType(type: string): Promise<CharacterEntity[]> {
+    return this.prisma.character.findMany({
+      where: {
+        type: type,
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
+  }
+
+  async findCharacterBySpecie(specie:string):Promise<CharacterEntity[]>{
+    const ch = this.prisma.character.findMany({
+      where: {
+        species: specie
+      },
+      orderBy: {
+        id: 'asc'
+      }
+    })
+    
+    return ch;
   }
 }
