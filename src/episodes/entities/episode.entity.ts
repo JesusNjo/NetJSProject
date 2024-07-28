@@ -24,4 +24,7 @@ export class EpisodeEntity {
   @IsOptional()
   @IsInt()
   statusId?: number; 
+
+  @IsInt()
+  duration?: number;
 }
