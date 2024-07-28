@@ -13,7 +13,6 @@ export class CharactersService {
   ) {}
 
   async createCharacter(character: CharacterEntity): Promise<Character> {
-    // Verificar si el statusId existe en la tabla Status
     const statusExists = await this.prisma.status.findUnique({
       where: { id: character.statusId },
     });
@@ -22,7 +21,6 @@ export class CharactersService {
       throw new Error(`Status with ID ${character.statusId} does not exist.`);
     }
   
-    // Crear el nuevo personaje usando el statusId
     const newCharacter = await this.prisma.character.create({
       data: {
         name: character.name,
@@ -48,7 +46,6 @@ export class CharactersService {
     const response = await lastValueFrom(this.httpService.get('https://rickandmortyapi.com/api/character'));
     const apiCharacters = response.data.results;
     
-    // Mapeo de status a statusId
     const statusMap = new Map<string, number>();
     const statuses = await this.prisma.status.findMany({ where: { statusTypeId: 1 } });
   
