@@ -95,4 +95,24 @@ export class CharactersController {
     }
   } 
 
+  //Paginacion
+
+  @Get('/paginated/page/:page/size/:size')
+  async getPaginatedCharacters(
+    @Param('page',ParseIntPipe) page: number,
+    @Param('size',ParseIntPipe) size: number,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      if (!page || !size || page <= 0 || size <= 0) {
+        res.status(HttpStatus.BAD_REQUEST).json({ message: 'Invalid page or pageSize' });
+        return;
+      }
+
+      const characters = await this.charactersService.findPaginatedCharacters(page, size);
+      res.status(HttpStatus.OK).json(characters);
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+  }
 }

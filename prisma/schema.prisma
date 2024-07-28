@@ -38,6 +38,7 @@ model Character {
   url                            String                          @unique
   episodes                       Episode[]                       @relation("CharacterEpisodes")
   characterEpisodeParticipations CharacterEpisodeParticipation[] @relation("CharacterParticipations")
+  @@unique([name, species, type])
 }
 
 model Episode {

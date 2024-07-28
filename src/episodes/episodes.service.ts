@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { HttpService } from '@nestjs/axios';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, startWith } from 'rxjs';
 import { EpisodeEntity } from './entities/episode.entity';
 import { Episode } from '@prisma/client';
 import { CharacterEpisodeParticipationDto } from './dto/character-episode-participation.dto';
@@ -196,6 +196,33 @@ export class EpisodesService {
         episodeId,
         startTime: data.startTime,
         endTime: data.endTime,
+      },
+    });
+  }
+
+  //Requerimientos
+
+  async findEpisodesBySeason(season:string):Promise<any>{
+   // const seasons = await this.prisma.subCategory.findMany({ where: { categoryId: 2 } });
+   const seasons =await this.prisma.episode.findMany({where : {episode:{startsWith:season},},orderBy:{id : 'asc'}})
+  
+    return seasons.length== 0 ? [] : seasons;
+  }
+
+  //Pagination
+
+  async findEpisodesPagination(page:number,size:number):Promise<Episode[]>{
+    if(page <1 || size<1){
+      throw new Error('Invalid page number or page size.');
+    }
+
+    const skip = (page -1 ) * size;
+
+    return this.prisma.episode.findMany({
+      skip: skip,
+      take: size,
+      orderBy: {
+        id: 'asc',
       },
     });
   }
