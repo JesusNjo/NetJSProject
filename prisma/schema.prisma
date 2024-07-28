@@ -47,6 +47,6 @@ model Episode {
   url        String        @unique
   created    String
   statusId   Int
-  status     Status        @relation("EpisodeStatus", fields: [statusId], references: [id]) // Especificar la relación aquí
+  status     Status        @relation("EpisodeStatus", fields: [statusId], references: [id])
   characters Character[]   @relation("CharacterEpisodes")
 }
