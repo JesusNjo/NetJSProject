@@ -4,6 +4,7 @@ import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { EpisodeEntity } from './entities/episode.entity';
 import { Episode } from '@prisma/client';
+import { CharacterEpisodeParticipationDto } from './dto/character-episode-participation.dto';
 
 @Injectable()
 export class EpisodesService {
@@ -49,12 +50,14 @@ export class EpisodesService {
         where: { url: episode.url }
       });
 
-      const duration = existingEpisode && existingEpisode.duration > 0
+      let duration = existingEpisode && existingEpisode.duration > 0
       ? existingEpisode.duration 
       : (episode.duration && episode.duration > 0) 
         ? episode.duration
         : defaultDuration; 
-
+        if (duration > 60) {
+          duration = 60; 
+        }
       await this.prisma.episode.upsert({
         where: { url: episode.url },
         update: {
@@ -183,5 +186,17 @@ export class EpisodesService {
       },
     });
     return updatedEpisode;
+  }
+
+
+  async createParticipation(data: CharacterEpisodeParticipationDto, characterId: number, episodeId: number) {
+    return this.prisma.characterEpisodeParticipation.create({
+      data: {
+        characterId,
+        episodeId,
+        startTime: data.startTime,
+        endTime: data.endTime,
+      },
+    });
   }
 }

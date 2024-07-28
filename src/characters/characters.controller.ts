@@ -2,7 +2,9 @@ import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, P
 import { CharactersService } from './characters.service';
 import { Response } from 'express';
 import { CharacterEntity } from './entity/character.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('characters')
 @Controller('characters')
 export class CharactersController {
   constructor(private readonly charactersService: CharactersService) {}

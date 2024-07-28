@@ -14,49 +14,49 @@ model StatusType {
 }
 
 model Status {
-  id          Int         @id @default(autoincrement())
-  name        String
-  statusType  StatusType  @relation("StatusTypeStatuses", fields: [statusTypeId], references: [id])
+  id           Int         @id @default(autoincrement())
+  name         String
+  statusType   StatusType  @relation("StatusTypeStatuses", fields: [statusTypeId], references: [id])
   statusTypeId Int
-  characters  Character[] @relation("CharacterStatus")
-  episodes    Episode[]   @relation("EpisodeStatus")
+  characters   Character[] @relation("CharacterStatus")
+  episodes     Episode[]   @relation("EpisodeStatus")
 
   @@unique([name, statusTypeId])
 }
 
 model Character {
-  id        Int      @id @default(autoincrement())
-  name      String
-  statusId  Int?
-  status    Status?  @relation("CharacterStatus", fields: [statusId], references: [id])
-  species   String?
-  type      String?
-  gender    String?
-  origin    String?
-  location  String?
-  image     String?
-  url       String   @unique
-  episodes  Episode[] @relation("CharacterEpisodes")
+  id                             Int                             @id @default(autoincrement())
+  name                           String
+  statusId                       Int?
+  status                         Status?                         @relation("CharacterStatus", fields: [statusId], references: [id])
+  species                        String?
+  type                           String?
+  gender                         String?
+  origin                         String?
+  location                       String?
+  image                          String?
+  url                            String                          @unique
+  episodes                       Episode[]                       @relation("CharacterEpisodes")
+  characterEpisodeParticipations CharacterEpisodeParticipation[] @relation("CharacterParticipations")
 }
 
 model Episode {
-  id           Int        @id @default(autoincrement())
-  name         String
-  air_date     String
-  episode      String
-  url          String     @unique
-  created      String
-  statusId     Int
-  status       Status     @relation("EpisodeStatus", fields: [statusId], references: [id])
-  characters   Character[] @relation("CharacterEpisodes")
-  duration     Int?
+  id                             Int                             @id @default(autoincrement())
+  name                           String
+  air_date                       String
+  episode                        String
+  url                            String                          @unique
+  created                        String
+  statusId                       Int
+  status                         Status                          @relation("EpisodeStatus", fields: [statusId], references: [id])
+  characters                     Character[]                     @relation("CharacterEpisodes")
+  characterEpisodeParticipations CharacterEpisodeParticipation[] @relation("EpisodeParticipations")
+  duration                       Int?
 }
 
-
-
 model Category {
-  id    Int    @id @default(autoincrement())
-  name  String @unique // 'SPECIES', 'SEASON', etc.
+  id            Int           @id @default(autoincrement())
+  name          String        @unique // 'SPECIES', 'SEASON', etc.
   subcategories SubCategory[] @relation("CategorySubcategories")
 }
 
@@ -67,4 +67,16 @@ model SubCategory {
   category   Category @relation("CategorySubcategories", fields: [categoryId], references: [id])
 
   @@unique([name, categoryId])
+}
+
+model CharacterEpisodeParticipation {
+  id          Int       @id @default(autoincrement())
+  character   Character @relation("CharacterParticipations", fields: [characterId], references: [id])
+  characterId Int
+  episode     Episode   @relation("EpisodeParticipations", fields: [episodeId], references: [id])
+  episodeId   Int
+  startTime   String
+  endTime     String
+
+  @@unique([characterId, episodeId, startTime])
 }

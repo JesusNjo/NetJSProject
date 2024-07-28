@@ -2,11 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, Par
 import { Response } from 'express';
 import { EpisodesService } from './episodes.service';
 import { EpisodeEntity } from './entities/episode.entity';
-import { Episode } from '@prisma/client';
-
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CharacterEpisodeParticipation } from '@prisma/client';
+import { CharactersService } from 'src/characters/characters.service';
+@ApiTags('episodes')
 @Controller('episodes')
 export class EpisodesController {
-  constructor(private readonly episodeService: EpisodesService) {}
+  constructor(private readonly episodeService: EpisodesService, 
+    private readonly characterService:CharactersService) {}
 
   @Get()
   async getAllEpisode(@Res() res: Response): Promise<EpisodeEntity[] | Object> {
@@ -63,4 +66,7 @@ export class EpisodesController {
       res.status(500).json({ message: error.message });
     }
   }
+
+
+  
 }
