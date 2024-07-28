@@ -2,11 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, Par
 import { Response } from 'express';
 import { EpisodesService } from './episodes.service';
 import { EpisodeEntity } from './entities/episode.entity';
-import { Episode } from '@prisma/client';
-
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CharacterEpisodeParticipation } from '@prisma/client';
+import { CharactersService } from 'src/characters/characters.service';
+@ApiTags('episodes')
 @Controller('episodes')
 export class EpisodesController {
-  constructor(private readonly episodeService: EpisodesService) {}
+  constructor(private readonly episodeService: EpisodesService, 
+    private readonly characterService:CharactersService) {}
 
   @Get()
   async getAllEpisode(@Res() res: Response): Promise<EpisodeEntity[] | Object> {
@@ -63,4 +66,33 @@ export class EpisodesController {
       res.status(500).json({ message: error.message });
     }
   }
+
+
+  //Requerimientos
+  @Get('season/:season')
+  async findEpisodesBySeason(@Res() res:Response,@Param('season') season:string):Promise<void>{
+    try {
+      const episodesSeason = await this.episodeService.findEpisodesBySeason(season.toUpperCase());
+      if(episodesSeason.length == 0 || episodesSeason == null) res.status(404).json({message:'Episode not found'});
+      res.status(200).json(episodesSeason)
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  //Paginacion
+
+  @Get('/pagination/page/:page/size/:size')
+  async findEpisodesPagination(@Param('page',ParseIntPipe) page:number,@Param('size',ParseIntPipe) size: number
+  ,@Res() res:Response
+):Promise<void >{
+    try {
+      const episodesPagination = await this.episodeService.findEpisodesPagination(page,size)
+      
+      episodesPagination.length != 0? res.status(200).json({episodesPagination}) : res.status(204).json({message:'Not content'});
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+  
 }

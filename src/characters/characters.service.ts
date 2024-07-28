@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { PrismaService } from '../prisma.service';
@@ -16,11 +16,23 @@ export class CharactersService {
     const statusExists = await this.prisma.status.findUnique({
       where: { id: character.statusId },
     });
-  
+
     if (!statusExists) {
       throw new Error(`Status with ID ${character.statusId} does not exist.`);
     }
-  
+
+    const existingCharacter = await this.prisma.character.findFirst({
+      where: {
+        name: character.name,
+        species: character.species,
+        type: character.type,
+      },
+    });
+
+    if (existingCharacter) {
+      throw new ConflictException('Character with the same name, species, and type already exists.');
+    }
+
     const newCharacter = await this.prisma.character.create({
       data: {
         name: character.name,
@@ -31,16 +43,12 @@ export class CharactersService {
         origin: character.origin,
         location: character.location,
         image: character.image,
-        url : character.url
+        url: character.url
       },
     });
-  
+
     return newCharacter;
   }
-  
-  
-  
-  
 
   async findAllCharacters(): Promise<CharacterEntity[]> {
     const response = await lastValueFrom(this.httpService.get('https://rickandmortyapi.com/api/character'));
@@ -49,8 +57,6 @@ export class CharactersService {
     const statusMap = new Map<string, number>();
     const statuses = await this.prisma.status.findMany({ where: { statusTypeId: 1 } });
     
-   
-  
     for (const status of statuses) {
       statusMap.set(status.name, status.id);
     }
@@ -85,10 +91,8 @@ export class CharactersService {
       });
     }
     
-    
-    return this.prisma.character.findMany({orderBy: {id :'asc'}});
+    return this.prisma.character.findMany({orderBy: {id: 'asc'}});
   }
-  
 
   async findCharacterById(id: number): Promise<CharacterEntity | null> {
     try {
@@ -112,11 +116,38 @@ export class CharactersService {
 
   async updateCharacterById(id: number, character: CharacterEntity): Promise<Character> {
     const current = await this.prisma.character.findUnique({ where: { id } });
-
+  
     if (!current) {
       throw new Error(`Character with id ${id} does not exist`);
     }
-
+  
+    if (character.name || character.species || character.type) {
+      const existingCharacter = await this.prisma.character.findFirst({
+        where: {
+          AND: [
+            { name: character.name || current.name },
+            { species: character.species || current.species },
+            { type: character.type || current.type },
+            { NOT: { id: id } }, 
+          ],
+        },
+      });
+  
+      if (existingCharacter) {
+        throw new Error(`A character with the name ${character.name} already exists in the same species and type.`);
+      }
+    }
+  
+    if (character.statusId) {
+      const statusExists = await this.prisma.status.findUnique({
+        where: { id: character.statusId },
+      });
+  
+      if (!statusExists) {
+        throw new Error(`Status with ID ${character.statusId} does not exist.`);
+      }
+    }
+  
     const characterToModify = await this.prisma.character.update({
       where: { id },
       data: {
@@ -127,14 +158,12 @@ export class CharactersService {
         gender: character.gender || current.gender,
         origin: character.origin || current.origin,
         location: character.location || current.location,
-        image: character.image || current.image
-      }
+        image: character.image || current.image,
+      },
     });
-
+  
     return characterToModify;
-  }
-
-  //Requerimientos nuevos:
+  }  
 
   async findCharactersByType(type: string): Promise<CharacterEntity[]> {
     return this.prisma.character.findMany({
@@ -147,16 +176,33 @@ export class CharactersService {
     });
   }
 
-  async findCharacterBySpecie(specie:string):Promise<CharacterEntity[]>{
-    const ch = this.prisma.character.findMany({
+  async findCharacterBySpecie(specie: string): Promise<CharacterEntity[]> {
+    return this.prisma.character.findMany({
       where: {
         species: specie
       },
       orderBy: {
         id: 'asc'
       }
-    })
-    
-    return ch;
+    });
   }
+
+  //Paginacion
+
+  async findPaginatedCharacters(page: number, pageSize: number): Promise<CharacterEntity[]> {
+    if (page < 1 || pageSize < 1) {
+      throw new Error('Invalid page number or page size.');
+    }
+
+    const skip = (page - 1) * pageSize;
+
+    return this.prisma.character.findMany({
+      skip: skip,
+      take: pageSize,
+      orderBy: {
+        id: 'asc',
+      },
+    });
+  }
+
 }
