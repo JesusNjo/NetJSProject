@@ -34,29 +34,36 @@ export class CharacterParticipationService {
         const startTimeStr = `${startTime}:${startTimeS}`;
         const endTimeStr = `${endTime}:${endTimeS}`;
   
-        await this.prisma.characterEpisodeParticipation.upsert({
+        const existingParticipation = await this.prisma.characterEpisodeParticipation.findFirst({
           where: {
-            characterId_episodeId_startTime: { //manera de buscar varios elementos
-              characterId: character.id,
-              episodeId: episode.id,
-              startTime: startTimeStr,
-            },
-          },
-          update: {
-            endTime: endTimeStr,
-          },
-          create: {
             characterId: character.id,
             episodeId: episode.id,
             startTime: startTimeStr,
-            endTime: endTimeStr,
           },
         });
+  
+        if (existingParticipation) {
+          await this.prisma.characterEpisodeParticipation.update({
+            where: { id: existingParticipation.id },
+            data: { endTime: endTimeStr },
+          });
+        } else {
+          await this.prisma.characterEpisodeParticipation.create({
+            data: {
+              characterId: character.id,
+              episodeId: episode.id,
+              startTime: startTimeStr,
+              endTime: endTimeStr,
+            },
+          });
+        }
       }
     }
   
     return this.prisma.characterEpisodeParticipation.findMany();
   }
+  
+  
   
 
   async findOne(id: number) {
@@ -87,5 +94,70 @@ export class CharacterParticipationService {
     if (!participationFound) return null;
 
     return this.prisma.characterEpisodeParticipation.delete({ where: { id } });
+  }
+
+  //Adicional
+  async findParticipationByCharacterId(id:number){
+    const characterFound = await this.prisma.character.findUnique({where : {id}})
+
+    return this.prisma.characterEpisodeParticipation.findMany({where: {characterId:characterFound.id}});
+  }
+
+  async findParticipationByEpisodeId(id:number){
+    const episodeFound = await this.prisma.episode.findUnique({where : {id}})
+
+    return this.prisma.characterEpisodeParticipation.findMany({where: {episodeId:episodeFound.id}});
+  }
+
+  async deleteCharacterFromEpisode(characterId: number, episodeToDelete: number) {
+    const participation = await this.prisma.characterEpisodeParticipation.findFirst({
+      where: {
+        characterId: characterId,
+        episodeId: episodeToDelete,
+      },
+    });
+  
+    if (!participation) {
+      throw new Error('Participation not found');
+    }
+  
+    await this.prisma.characterEpisodeParticipation.delete({
+      where: { id: participation.id },
+    });
+  
+    return { message: 'El personaje ha sido eliminado del episodio correctamente' };
+  }
+
+  //Pagination
+
+  async findAllPagination(page:number,size:number){
+    if(size < 1 || page <1){
+      throw new Error('Invalid page number or page size.');
+    }
+    
+    const skip = (page - 1) * size;
+
+    return this.prisma.characterEpisodeParticipation.findMany({
+      skip: skip,
+      take: size,
+      orderBy:{
+        id : 'asc'
+      }
+    })
+  }
+
+  async findAllPaginationFive(page:number){
+    if(page< 1){
+      throw new Error('Invalid page number.');
+    }
+
+    const skip = (page -1) * 5;
+    return this.prisma.characterEpisodeParticipation.findMany({
+      skip: skip,
+      take: 5,
+      orderBy:{
+        id: 'asc'
+      }
+    })
   }
 }
