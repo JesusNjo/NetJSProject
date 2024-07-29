@@ -95,7 +95,7 @@ export class EpisodesController {
     }
   }
 
-  @Get('/paginationFive/page/:page/size/:size')
+  @Get('/paginationFive/page/:page')
   async findEpisodesPaginationFive(@Param('page',ParseIntPipe) page:number
   ,@Res() res:Response
 ):Promise<void >{

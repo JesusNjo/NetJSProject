@@ -157,6 +157,8 @@ async function seedSubcategories() {
   console.log('Subcategorías de temporada insertadas con éxito');
 }
 
+
+
 async function main() {
   await seedStatusTypesAndStatuses();
   await seedCategories();
