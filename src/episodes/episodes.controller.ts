@@ -94,5 +94,18 @@ export class EpisodesController {
       res.status(500).json({ message: error.message });
     }
   }
+
+  @Get('/paginationFive/page/:page/size/:size')
+  async findEpisodesPaginationFive(@Param('page',ParseIntPipe) page:number
+  ,@Res() res:Response
+):Promise<void >{
+    try {
+      const episodesPagination = await this.episodeService.findEpisodesPaginationFive(page)
+      
+      episodesPagination.length != 0? res.status(200).json({episodesPagination}) : res.status(204).json({message:'Not content'});
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
   
 }

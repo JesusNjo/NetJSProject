@@ -115,4 +115,22 @@ export class CharactersController {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
   }
+
+  @Get('/paginatedFive/page/:page')
+  async getPaginatedCharactersFive(
+    @Param('page',ParseIntPipe) page: number,
+    @Res() res: Response
+  ): Promise<void> {
+    try {
+      if (!page || page <= 0) {
+        res.status(HttpStatus.BAD_REQUEST).json({ message: 'Invalid page or pageSize' });
+        return;
+      }
+
+      const characters = await this.charactersService.findPaginatedCharactersFive(page);
+      res.status(HttpStatus.OK).json(characters);
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+  }
 }
