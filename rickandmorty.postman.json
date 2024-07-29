@@ -1,0 +1,835 @@
+{
+	"info": {
+		"_postman_id": "0aebb2ca-4b50-46bd-9be6-1578b57808b3",
+		"name": "rickandmorty app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29412931"
+	},
+	"item": [
+		{
+			"name": "Character participation",
+			"item": [
+				{
+					"name": "Get all character participation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/character-participation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"character-participation"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Human",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all character participation pagin PAGE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/character-participation/pagination/page/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"character-participation",
+								"pagination",
+								"page",
+								"1"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Human",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all character participation pagin PAGE&SIZE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/character-participation/pagination/page/1/size/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"character-participation",
+								"pagination",
+								"page",
+								"1",
+								"size",
+								"5"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Human",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all character participation by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/character-participation/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"character-participation",
+								"1"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Human",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create character participation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"characterId\": 5,\r\n    \"episodeId\": 3,\r\n    \"startTime\": \"25:48\",\r\n    \"endTime\": \"31:11\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/character-participation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"character-participation"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Human",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify character participation",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"characterId\": 5,\r\n    \"episodeId\": 3,\r\n    \"startTime\": \"25:47\",\r\n    \"endTime\": \"31:10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/character-participation/93",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"character-participation",
+								"93"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Human",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify character participation Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/character-participation/93",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"character-participation",
+								"93"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Human",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Participation by episode",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/character-participation/episode/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"character-participation",
+								"episode",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Participation by character",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/character-participation/character/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"character-participation",
+								"character",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete character from episode",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/character-participation/delelete-char/2/episode/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"character-participation",
+								"delelete-char",
+								"2",
+								"episode",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Character",
+			"item": [
+				{
+					"name": "Get Character pagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/characters/paginated/page/1/size/5",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"characters",
+								"paginated",
+								"page",
+								"1",
+								"size",
+								"5"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Human",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Character pagination five",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/characters/paginatedFive/page/1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"characters",
+								"paginatedFive",
+								"page",
+								"1"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Human",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all characters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/characters/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"characters",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get character by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/characters/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"characters",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get character by type",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/characters/find-by-type/Genetic%20experiment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"characters",
+								"find-by-type",
+								"Genetic%20experiment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get character by specie",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/characters/find-by-species/Human",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"characters",
+								"find-by-species",
+								"Human"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create character",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"test\",\r\n        \"statusId\": 2,\r\n        \"species\": \"Human\",\r\n        \"type\": \"\",\r\n        \"gender\": \"Male\",\r\n        \"origin\": \"Earth (C-137)\",\r\n        \"location\": \"Citadel of Ricks\",\r\n        \"image\": \"test\",\r\n        \"url\": \"test\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/characters",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"characters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete character",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"test\",\r\n        \"statusId\": 2,\r\n        \"species\": \"Human\",\r\n        \"type\": \"\",\r\n        \"gender\": \"Male\",\r\n        \"origin\": \"Earth (C-137)\",\r\n        \"location\": \"Citadel of Ricks\",\r\n        \"image\": \"test\",\r\n        \"url\": \"test\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/characters/21",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"characters",
+								"21"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify character by id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"test2\",\r\n        \"statusId\": 2,\r\n        \"species\": \"Human\",\r\n        \"type\": \"\",\r\n        \"gender\": \"Male\",\r\n        \"origin\": \"Earth (C-137)\",\r\n        \"location\": \"Citadel of Ricks\",\r\n        \"image\": \"test\",\r\n        \"url\": \"test\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/characters/22",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"characters",
+								"22"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Episodes",
+			"item": [
+				{
+					"name": "Get all episodes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"Meeseeks and Destrossssy\",\r\n        \"air_date\": \"January 20, 2014\",\r\n        \"episode\": \"S01E05\",\r\n        \"url\": \"https://rickandmortyapi.com/api/episode/700\",\r\n        \"created\": \"2017-11-10T12:56:34.236Z\",\r\n        \"statusId\": 4,\"characters\": [\"https://rickandmortyapi.com/api/character/2\"]\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/episodes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"episodes"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all episodes by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"Meeseeks and Destrossssy\",\r\n        \"air_date\": \"January 20, 2014\",\r\n        \"episode\": \"S01E05\",\r\n        \"url\": \"https://rickandmortyapi.com/api/episode/700\",\r\n        \"created\": \"2017-11-10T12:56:34.236Z\",\r\n        \"statusId\": 4,\"characters\": [\"https://rickandmortyapi.com/api/character/2\"]\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/episodes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"episodes",
+								"1"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all episodes by season",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"Meeseeks and Destrossssy\",\r\n        \"air_date\": \"January 20, 2014\",\r\n        \"episode\": \"S01E05\",\r\n        \"url\": \"https://rickandmortyapi.com/api/episode/700\",\r\n        \"created\": \"2017-11-10T12:56:34.236Z\",\r\n        \"statusId\": 4,\"characters\": [\"https://rickandmortyapi.com/api/character/2\"]\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/episodes/season/s01",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"episodes",
+								"season",
+								"s01"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all episodes pagination",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"Meeseeks and Destrossssy\",\r\n        \"air_date\": \"January 20, 2014\",\r\n        \"episode\": \"S01E05\",\r\n        \"url\": \"https://rickandmortyapi.com/api/episode/700\",\r\n        \"created\": \"2017-11-10T12:56:34.236Z\",\r\n        \"statusId\": 4,\"characters\": [\"https://rickandmortyapi.com/api/character/2\"]\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/episodes/pagination/page/1/size/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"episodes",
+								"pagination",
+								"page",
+								"1",
+								"size",
+								"5"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all episodes pagination Copy",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"Meeseeks and Destrossssy\",\r\n        \"air_date\": \"January 20, 2014\",\r\n        \"episode\": \"S01E05\",\r\n        \"url\": \"https://rickandmortyapi.com/api/episode/700\",\r\n        \"created\": \"2017-11-10T12:56:34.236Z\",\r\n        \"statusId\": 4,\"characters\": [\"https://rickandmortyapi.com/api/character/2\"]\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/episodes/paginationFive/page/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"episodes",
+								"paginationFive",
+								"page",
+								"1"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create episode",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"Meeseeks and Destrossssy\",\r\n        \"air_date\": \"January 20, 2014\",\r\n        \"episode\": \"S01E05\",\r\n        \"url\": \"https://rickandmortyapi.com/api/episode/700\",\r\n        \"created\": \"2017-11-10T12:56:34.236Z\",\r\n        \"statusId\": 4,\"characters\": [\"https://rickandmortyapi.com/api/character/2\"]\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/episodes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"episodes"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify episode",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"Meeseeks ande Destrossssy\",\r\n        \"air_date\": \"January 20, 2014\",\r\n        \"episode\": \"S01E05\",\r\n        \"url\": \"https://rickandmortyapi.com/api/episode/700\",\r\n        \"created\": \"2017-11-10T12:56:34.236Z\",\r\n        \"statusId\": 4,\"characters\": [\"https://rickandmortyapi.com/api/character/1\"]\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/episodes/21",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"episodes",
+								"21"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete episode",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"Meeseeks ande Destrossssy\",\r\n        \"air_date\": \"January 20, 2014\",\r\n        \"episode\": \"S01E05\",\r\n        \"url\": \"https://rickandmortyapi.com/api/episode/700\",\r\n        \"created\": \"2017-11-10T12:56:34.236Z\",\r\n        \"statusId\": 4,\"characters\": [\"https://rickandmortyapi.com/api/character/1\"]\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/episodes/21",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"episodes",
+								"21"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
