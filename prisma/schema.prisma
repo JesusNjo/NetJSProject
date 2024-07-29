@@ -57,7 +57,7 @@ model Episode {
 
 model Category {
   id            Int           @id @default(autoincrement())
-  name          String        @unique // 'SPECIES', 'SEASON', etc.
+  name          String        @unique 
   subcategories SubCategory[] @relation("CategorySubcategories")
 }
 

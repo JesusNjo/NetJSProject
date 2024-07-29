@@ -9,7 +9,7 @@ import { CharacterEpisodeParticipationDto } from './dto/character-episode-partic
 @Injectable()
 export class EpisodesService {
   constructor(
-    private readonly prisma: PrismaService, // Cambiado a PrismaService
+    private readonly prisma: PrismaService, 
     private readonly httpService: HttpService,
   ) {}
 
